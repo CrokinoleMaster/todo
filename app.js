@@ -27,6 +27,30 @@ function TaskAtHandApp(){
         $('button.move-down', $task).click(function(){
             $task.insertAfter($task.next());
         });
+        $('span.task-name', $task).click(function(){
+            function onEditTaskName($span){
+                $span.hide()
+                .siblings('input.task-name')
+                .val($span.text())
+                .show()
+                .focus();
+            }
+            onEditTaskName($(this));
+        });
+        $('input.task-name', $task).change(function() {
+            function onChangeTaskName($input){
+                $input.hide();
+                var $span = $input.siblings('span.task-name');
+                if ($input.val()){
+                    $span.text($input.val());
+                }
+                $span.show();
+            }
+            onChangeTaskName($(this));
+        })
+        .blur(function(){
+            $(this).hide().siblings('span.task-name').show();
+        });
     }
     this.start = function()
     {
