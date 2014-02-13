@@ -1,57 +1,9 @@
 "use strict";
 
 function TaskAtHandApp(){
-    var version = "v1.0";
-    function setStatus(message){
-        $("#app>footer").text(message);
-    }
-    function addTask(){
-        var taskName = $('#new-task-name').val();
-        if (taskName){
-            addTaskElement(taskName);
-            $('#new-task-name').val('').focus();
-        }
-    }
-    function addTaskElement(taskName){
-        var $task = $('#task-template .task').clone();
-        $('span.task-name', $task).text(taskName);
+    var version = "v1.0",
+        appStorage = new AppStorage("taskAtHand");
 
-        $('#task-list').append($task);
-
-        $('button.delete', $task).click(function(){
-            $task.remove();
-        });
-        $('button.move-up', $task).click(function(){
-            $task.insertBefore($task.prev());
-        });
-        $('button.move-down', $task).click(function(){
-            $task.insertAfter($task.next());
-        });
-        $('span.task-name', $task).click(function(){
-            function onEditTaskName($span){
-                $span.hide()
-                .siblings('input.task-name')
-                .val($span.text())
-                .show()
-                .focus();
-            }
-            onEditTaskName($(this));
-        });
-        $('input.task-name', $task).change(function() {
-            function onChangeTaskName($input){
-                $input.hide();
-                var $span = $input.siblings('span.task-name');
-                if ($input.val()){
-                    $span.text($input.val());
-                }
-                $span.show();
-            }
-            onChangeTaskName($(this));
-        })
-        .blur(function(){
-            $(this).hide().siblings('span.task-name').show();
-        });
-    }
     this.start = function()
     {
         $('#new-task-name').keypress(function(e){
@@ -63,8 +15,94 @@ function TaskAtHandApp(){
         .focus();
 
         $("#app>header").append(version);
+        loadTaskList();
         setStatus("ready");
     };
+
+
+    function setStatus(message){
+        $("#app>footer").text(message);
+    }
+    function addTask(){
+        var taskName = $('#new-task-name').val();
+        if (taskName){
+            addTaskElement(taskName);
+            $('#new-task-name').val('').focus();
+            saveTaskList();
+        }
+    }
+    function addTaskElement(taskName){
+        var $task = $('#task-template .task').clone();
+        $('span.task-name', $task).text(taskName);
+
+        $('#task-list').append($task);
+
+        $('button.delete', $task).click(function(){
+            removeTask($task);
+        });
+        $('button.move-up', $task).click(function(){
+            moveTask($task, true);
+        });
+        $('button.move-down', $task).click(function(){
+            moveTask($task, false);
+        });
+        $('span.task-name', $task).click(function(){
+            onEditTaskName($(this));
+        });
+        $('input.task-name', $task).change(function() {
+            onChangeTaskName($(this));
+        })
+        .blur(function(){
+            $(this).hide().siblings('span.task-name').show();
+        });
+    }
+    function saveTaskList(){
+        var tasks=[];
+        $('#task-list .task span.task-name').each(function() {
+            if ($(this).text()){
+                tasks.push($(this).text());
+            }
+        });
+        appStorage.setValue('taskList', tasks);
+    }
+    function loadTaskList(){
+        var tasks = appStorage.getValue('taskList');
+        if (tasks){
+            for (var i in tasks){
+                addTaskElement(tasks[i]);
+            }
+        }
+    }
+    function onChangeTaskName($input){
+        $input.hide();
+        var $span = $input.siblings('span.task-name');
+        if ($input.val()){
+            $span.text($input.val());
+        }
+        $span.show();
+        saveTaskList();
+    }
+    function onEditTaskName($span){
+        $span.hide()
+        .siblings('input.task-name')
+        .val($span.text())
+        .show()
+        .focus();
+    }
+    function removeTask($task){
+        $task.remove();
+        saveTaskList();
+    }
+    function moveTask($task, moveUp){
+        if (moveUp){
+            $task.insertBefore($task.prev());
+        }
+        else{
+            $task.insertAfter($task.next());
+        }
+        saveTaskList();
+    }
+
 }
 
 
