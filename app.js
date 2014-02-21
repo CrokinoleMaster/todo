@@ -106,6 +106,7 @@ function TaskAtHandApp(){
             saveTaskList();
         }
     }
+
     function toggleDetails($task){
         $('.details', $task).slideToggle();
         $('button.toggle-details', $task);

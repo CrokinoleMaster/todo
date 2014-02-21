@@ -50,7 +50,7 @@ function TaskList(tasks)
     this.getTask = function(taskId)
     {
         var index = getTaskIndex(taskId);
-        return (index >= 0 ? task[index] : null);
+        return (index >= 0 ? tasks[index] : null);
     };
     this.each = function(callback)
     {

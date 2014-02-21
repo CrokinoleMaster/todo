@@ -49,6 +49,7 @@ button
   font-size: 1.5em;
   color: WhiteSmoke;
   background-color: #006;
+  box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.6);
 }
 #app>footer
 {
@@ -59,18 +60,32 @@ button
   color: WhiteSmoke;
   background-color: #006;
 }
+
 #main
 {
   max-width: 25em;
   min-width: 9em;
   margin: 1em auto;
 }
-#task-name
+#add-task label
+{
+    display: block;
+    font-weight: bold;
+}
+#new-task-name
 {
   font-size: 1em;
   display: block;
   width: 98%;
 }
+#task-list
+{
+  padding: 0;
+  .task:hover{
+    background-color: white;
+  }
+}
+
 #task-list .task
 {
   position: relative;
@@ -80,9 +95,13 @@ button
   background-color: beige;
   border-radius: 4px;
   box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
+  input.task-name{
+    margin: 0;
+    font-size: 1em;
+  }
   .Transition(all, 0.25s, ease);
   .details{
-    display: block;
+    display: none;
     background-color: gray;
     color: white;
     border-radius: 4px;
@@ -117,6 +136,7 @@ button
   border: 1px solid black;
   border-radius: 2px;
   opacity: 0;
+  padding: 1px;
 
   .Transition(all, 0.25s, ease);
 
@@ -131,7 +151,7 @@ button
 #task-list .task:hover .tools,
 #task-list .task.selected .tools
 {
-opacity: 1;
+  opacity: 1;
 }
 
 #toolbar
